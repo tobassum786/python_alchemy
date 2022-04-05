@@ -6,7 +6,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////db.sqlite3'
 app.config['SQLACHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = '3UPijOcTgh7oo7qBR0cDsA'
 
@@ -23,14 +23,23 @@ class Customer(db.Model):
 	postcode = db.Column(db.string(50), nullable=False)
 	email = db.Column(db.string(50), nullable=True, unique=True)
 
+	# Relation with backrefernce to order
+	orders = db.relationship('order', backref='customer')
 
 class Order(db.Model):
 	id = db.Column(db.integer, primary_key=True)
 	order_date = db.Column(db.DateTime, nullable=False defualt=datetime.utcnow())
-	shipped_date = db.Column(db.DateTime, datetime)
-	delivered_date = db.Column(db.DateTime, datetime)
+	shipped_date = db.Column(db.DateTime)
+	delivered_date = db.Column(db.DateTime)
 	cupon_code = db.Column(db.string(50))
 
+	# Make Relationships
+	customer_id = db.Column(db.integer, db.ForeignKey('customer.id'), nullable=False)
+
+order_product = db.Table('order_product'
+	db.Column('order_id', db.integer, ForeignKey('order.id'), primary_key=True)
+	db.Column('Product_id', db.integer, ForeignKey('product.id'), primary_key=True)
+	)
 
 
 class Product(db.Model):
