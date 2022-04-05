@@ -26,6 +26,11 @@ class Customer(db.Model):
 	# Relation with backrefernce to order
 	orders = db.relationship('order', backref='customer')
 
+order_product = db.Table('order_product'
+	db.Column('order_id', db.integer, ForeignKey('order.id'), primary_key=True)
+	db.Column('Product_id', db.integer, ForeignKey('product.id'), primary_key=True)
+	)
+
 class Order(db.Model):
 	id = db.Column(db.integer, primary_key=True)
 	order_date = db.Column(db.DateTime, nullable=False defualt=datetime.utcnow())
@@ -36,12 +41,8 @@ class Order(db.Model):
 	# Make Relationships
 	customer_id = db.Column(db.integer, db.ForeignKey('customer.id'), nullable=False)
 
-order_product = db.Table('order_product'
-	db.Column('order_id', db.integer, ForeignKey('order.id'), primary_key=True)
-	db.Column('Product_id', db.integer, ForeignKey('product.id'), primary_key=True)
-	)
-
-
+	products = db.relationship('products', secondary=order_product)
+   
 class Product(db.Model):
 	id = db.Column(db.integer, primary_key=True)
 	name = db.Column(db.string(50), nullable=False, unique=True)
