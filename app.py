@@ -6,7 +6,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////db.sqlite3'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
 app.config['SQLACHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = '3UPijOcTgh7oo7qBR0cDsA'
 
@@ -19,26 +19,27 @@ class Customer(db.Model):
 	first_name = db.Column(db.String(50), nullable=False)
 	last_name = db.Column(db.String(50), nullable=False)
 	address = db.Column(db.String(500), nullable=False)
-	city = db.Column(db.String(500), nullable=False)
+	city = db.Column(db.String(50), nullable=False)
 	postcode = db.Column(db.String(50), nullable=False)
-	email = db.Column(db.String(50), nullable=True, unique=True)
+	email = db.Column(db.String(50), nullable=False, unique=True)
 
 	# Relation with backrefernce to order
 	orders = db.relationship('order', backref='customer')
 
 order_product = db.Table('order_product',
-	db.Column('order_id', db.Integer, ForeignKey('order.id'), primary_key=True),
-	db.Column('Product_id', db.Integer, ForeignKey('product.id'), primary_key=True)
+	db.Column('order_id', db.Integer, db.ForeignKey('order.id'), primary_key=True),
+	db.Column('Product_id', db.Integer, db.ForeignKey('product.id'), primary_key=True)
 	)
 
 class Order(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
-	order_date = db.Column(db.DateTime, nullable=False, defualt=datetime.utcnow())
+	# Delete default=datetime.utcnow for fix error
+
+	order_date = db.Column(db.DateTime, nullable=False)
 	shipped_date = db.Column(db.DateTime)
 	delivered_date = db.Column(db.DateTime)
-	cupon_code = db.Column(db.String(50))
-
-	# Make Relationships
+	Coupon = db.Column(db.String(50))
+	# Make Relation 
 	customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
 	products = db.relationship('products', secondary=order_product)
@@ -49,10 +50,6 @@ class Product(db.Model):
 	price = db.Column(db.Integer, nullable=False)
 
 
-
-@app.route('/')
-def index():
-	return "Hello World"
 
 if __name__=='__main__':
 	app.run(debug=True)
