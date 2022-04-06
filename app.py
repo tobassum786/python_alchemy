@@ -15,38 +15,38 @@ db = SQLAlchemy(app)
 
 # Making Tables
 class Customer(db.Model):
-	id = db.Column(db.integer, primary_key=True)
-	first_name = db.Column(db.string(50), nullable=False)
-	last_name = db.Column(db.string(50), nullable=False)
-	address = db.Column(db.string(500), nullable=False)
-	city = db.Column(db.string(500), nullable=False)
-	postcode = db.Column(db.string(50), nullable=False)
-	email = db.Column(db.string(50), nullable=True, unique=True)
+	id = db.Column(db.Integer, primary_key=True)
+	first_name = db.Column(db.String(50), nullable=False)
+	last_name = db.Column(db.String(50), nullable=False)
+	address = db.Column(db.String(500), nullable=False)
+	city = db.Column(db.String(500), nullable=False)
+	postcode = db.Column(db.String(50), nullable=False)
+	email = db.Column(db.String(50), nullable=True, unique=True)
 
 	# Relation with backrefernce to order
 	orders = db.relationship('order', backref='customer')
 
-order_product = db.Table('order_product'
-	db.Column('order_id', db.integer, ForeignKey('order.id'), primary_key=True)
-	db.Column('Product_id', db.integer, ForeignKey('product.id'), primary_key=True)
+order_product = db.Table('order_product',
+	db.Column('order_id', db.Integer, ForeignKey('order.id'), primary_key=True),
+	db.Column('Product_id', db.Integer, ForeignKey('product.id'), primary_key=True)
 	)
 
 class Order(db.Model):
-	id = db.Column(db.integer, primary_key=True)
-	order_date = db.Column(db.DateTime, nullable=False defualt=datetime.utcnow())
+	id = db.Column(db.Integer, primary_key=True)
+	order_date = db.Column(db.DateTime, nullable=False, defualt=datetime.utcnow())
 	shipped_date = db.Column(db.DateTime)
 	delivered_date = db.Column(db.DateTime)
-	cupon_code = db.Column(db.string(50))
+	cupon_code = db.Column(db.String(50))
 
 	# Make Relationships
-	customer_id = db.Column(db.integer, db.ForeignKey('customer.id'), nullable=False)
+	customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
 	products = db.relationship('products', secondary=order_product)
    
 class Product(db.Model):
-	id = db.Column(db.integer, primary_key=True)
-	name = db.Column(db.string(50), nullable=False, unique=True)
-	price = db.Column(db.integer, nullable=False)
+	id = db.Column(db.Integer, primary_key=True)
+	name = db.Column(db.String(50), nullable=False, unique=True)
+	price = db.Column(db.Integer, nullable=False)
 
 
 
