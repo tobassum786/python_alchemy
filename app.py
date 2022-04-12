@@ -15,16 +15,14 @@ db = SQLAlchemy(app)
 
 # Making Tables
 class Customer(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	first_name = db.Column(db.String(50), nullable=False)
-	last_name = db.Column(db.String(50), nullable=False)
-	address = db.Column(db.String(500), nullable=False)
-	city = db.Column(db.String(50), nullable=False)
-	postcode = db.Column(db.String(50), nullable=False)
-	email = db.Column(db.String(50), nullable=False, unique=True)
-
-	# Relation with backrefernce to order
-	orders = db.relationship('order', backref='customer')
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column (db.String(50), nullable=False)
+    last_name = db.Column (db.String(50), nullable=False) 
+    address = db.Column (db.String(500), nullable=False)
+    city = db.Column (db.String(50), nullable=False)
+    postcode = db.Column (db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False, unique=True)
+    orders = db.relationship('Order', backref='customer')
 
 order_product = db.Table('order_product',
 	db.Column('order_id', db.Integer, db.ForeignKey('order.id'), primary_key=True),
@@ -32,17 +30,14 @@ order_product = db.Table('order_product',
 	)
 
 class Order(db.Model):
-	id = db.Column(db.Integer, primary_key=True)
-	# Delete default=datetime.utcnow for fix error
-
-	order_date = db.Column(db.DateTime, nullable=False)
-	shipped_date = db.Column(db.DateTime)
-	delivered_date = db.Column(db.DateTime)
-	Coupon = db.Column(db.String(50))
-	# Make Relation 
-	customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
-
-	products = db.relationship('products', secondary=order_product)
+    id = db.Column(db.Integer, primary_key=True)
+    order_date = db.Column (db.DateTime, nullable=False)
+    shipped_date = db.Column(db. DateTime)
+    delivered_date = db.Column(db.DateTime)
+    coupon_code = db.Column(db.String (50))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+   
+    products = db.relationship('Product', secondary=order_product)
    
 class Product(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
