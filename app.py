@@ -31,7 +31,7 @@ order_product = db.Table('order_product',
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    order_date = db.Column (db.DateTime, nullable=False)
+    order_date = db.Column (db.DateTime, nullable=False, default=datetime.utcnow)
     shipped_date = db.Column(db. DateTime)
     delivered_date = db.Column(db.DateTime)
     coupon_code = db.Column(db.String (50))
